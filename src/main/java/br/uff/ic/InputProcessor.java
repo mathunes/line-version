@@ -12,7 +12,11 @@ public class InputProcessor {
         if (input.length > 0) {
             switch (input[0]) {
                 case "init":
-                    versioner.init();
+                    if (input.length == 2) {
+                        versioner.init(input[1]);
+                    } else {
+                        versioner.init();
+                    }
                     break;
                 default:
                     System.out.println("lvn: " + input[0] + " is not a lvn command.");

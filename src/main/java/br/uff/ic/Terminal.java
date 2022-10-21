@@ -10,12 +10,23 @@ import java.util.ArrayList;
 
 public class Terminal {
     
-    public static List<String> runCommand(String command) {
+	private String directory;
+
+	public Terminal() {
+		this.directory = ".";
+	}
+
+    public List<String> runCommand(String command, String directory) {
+		this.directory = directory;
+		return this.runCommand(command);
+	}
+
+    public List<String> runCommand(String command) {
         List<String> outputLines = new ArrayList();
 
 		try {
 			Runtime runtime = Runtime.getRuntime();
-			Process process = runtime.exec(command, null, new File("."));
+			Process process = runtime.exec(command, null, new File(this.directory));
 			process.waitFor();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));

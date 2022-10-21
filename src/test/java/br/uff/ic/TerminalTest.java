@@ -22,7 +22,8 @@ public class TerminalTest {
 
     @Test
     public void shouldRunAValidCommand() {
-        List<String> outputLines = Terminal.runCommand("echo test");
+		Terminal terminal = new Terminal();
+        List<String> outputLines = terminal.runCommand("echo test");
         for (int i = 0; i < outputLines.size(); i++) {
             System.out.println(outputLines.get(i));
         }
