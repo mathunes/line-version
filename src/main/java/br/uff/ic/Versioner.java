@@ -5,14 +5,14 @@ import java.io.File;
 public class Versioner {
 
     private Git git;
+    private Terminal terminal;
 
     public Versioner() {
         git = new Git();
+        terminal = new Terminal();
     }
 
     public void init() {
-        Terminal terminal = new Terminal();
-
         if ((git.revParse().size() > 0) && (git.revParse().get(0).equals("true"))) {
             if (new File(".lvn").exists()) {
                 System.out.println("lvn: repository is already initialized.");
@@ -26,8 +26,6 @@ public class Versioner {
     }
 
     public void init(String directory) {
-        Terminal terminal = new Terminal();
-
         if (!(new File(directory).exists())) {
             System.out.println("lvn: this directory does not exists.");
         } else {    
@@ -43,4 +41,24 @@ public class Versioner {
             }
         }   
     }
+
+    public Boolean isLvnRepository() {
+        if (new File(".lvn").exists()) {
+            return true;
+        }
+        System.out.println("lvn: this is a not lvn repository.");
+        return false;
+    }
+
+    // public Boolean isLvnRepository(String directory) {
+    //     if (new File(directory + "/.lvn").exists()) {
+    //         return true;
+    //     }
+    //     System.out.println("lvn: this is a not lvn repository.");
+    //     return false;
+    // }
+
+    // public void createVersion(String file) {
+    //     System.out.println(file);
+    // }
 }

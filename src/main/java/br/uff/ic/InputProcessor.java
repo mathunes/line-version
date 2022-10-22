@@ -18,6 +18,17 @@ public class InputProcessor {
                         versioner.init();
                     }
                     break;
+                case "version":
+                    if (input.length == 1) {
+                        if (versioner.isLvnRepository()) {
+                            System.out.println("lvn: missing file for versioning.");
+                        }
+                    } else if (input.length == 2) {
+                        if (versioner.isLvnRepository(input[1])) {
+                            versioner.createVersion(input[1]);                        
+                        }
+                    }
+                    break;
                 default:
                     System.out.println("lvn: " + input[0] + " is not a lvn command.");
                     break;
