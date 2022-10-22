@@ -60,7 +60,11 @@ public class Versioner {
 
     public void createVersion(String file) {
         if (new File(file).exists()) {
-            System.out.println(file);
+            if (git.lsFiles(file).size() > 0) {
+                for (int i = 0; i < git.lsFiles(file).size(); i++) {
+                    System.out.println(git.lsFiles(file).get(i));
+                }
+            }
         } else {
             System.out.println("lvn: this file does not exists.");
         }
