@@ -60,8 +60,10 @@ public class Versioner {
 
     public void createVersion(String file) {
         if (new File(file).exists()) {
+            //check if file is versioned by git
             if (git.lsFiles(file).size() > 0) {
                 for (int i = 0; i < git.lsFiles(file).size(); i++) {
+                    //use git log -p --reverse <file>
                     System.out.println(git.lsFiles(file).get(i));
                 }
             }
