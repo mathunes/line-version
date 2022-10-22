@@ -43,14 +43,29 @@ public class InputProcessorTest {
 
     @Test
     public void shouldRunHandleInputWithValidArgument() {
-        File lvnDir = new File(".lvn");
-        lvnDir.delete();
+        Terminal terminal = new Terminal();
+        String directoryName = "shouldRunHandleInputWithValidArgument";
+
+        File directory = new File("../" + directoryName);
+        if (!directory.exists()){
+            directory.mkdirs();
+        }
+
+        File lvnDir = new File("../" + directoryName + "/.lvn");
+        if (lvnDir.exists()){   
+            lvnDir.delete();
+        }
      
-        String invalidParameter = "init";
-        inputProcessor.handleInput(new String[]{invalidParameter});
+        terminal.runCommand("git init", "../" + directoryName);
+
+        String validParameter = "init";
+        inputProcessor.handleInput(new String[]{validParameter, "../" + directoryName});
         assertEquals("lvn: initialized repository.", outputStreamCaptor.toString().trim());
      
+        terminal.runCommand("rm -r .git", "../" + directoryName);
+
         lvnDir.delete();
+        directory.delete();
     }
 
     @AfterEach

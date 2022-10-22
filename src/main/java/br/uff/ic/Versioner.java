@@ -50,15 +50,19 @@ public class Versioner {
         return false;
     }
 
-    // public Boolean isLvnRepository(String directory) {
-    //     if (new File(directory + "/.lvn").exists()) {
-    //         return true;
-    //     }
-    //     System.out.println("lvn: this is a not lvn repository.");
-    //     return false;
-    // }
+    public Boolean isLvnRepository(String directory) {
+        if (new File(directory + "/.lvn").exists()) {
+            return true;
+        }
+        System.out.println("lvn: this is a not lvn repository.");
+        return false;
+    }
 
-    // public void createVersion(String file) {
-    //     System.out.println(file);
-    // }
+    public void createVersion(String file) {
+        if (new File(file).exists()) {
+            System.out.println(file);
+        } else {
+            System.out.println("lvn: this file does not exists.");
+        }
+    }
 }
