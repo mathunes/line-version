@@ -63,8 +63,8 @@ public class InputProcessorTest {
         assertEquals("lvn: initialized repository.", outputStreamCaptor.toString().trim());
      
         terminal.runCommand("rm -r .git", "../" + directoryName);
+        terminal.runCommand("rm -r .lvn", "../" + directoryName);
 
-        lvnDir.delete();
         directory.delete();
     }
 
