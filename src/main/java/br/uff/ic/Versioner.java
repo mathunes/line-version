@@ -1,6 +1,9 @@
 package br.uff.ic;
 
 import java.io.File;
+import java.io.FileWriter;
+
+import java.util.List;
 
 public class Versioner {
 
@@ -19,11 +22,17 @@ public class Versioner {
             } else {
                 terminal.runCommand("mkdir .lvn");
                 terminal.runCommand("mkdir objects", ".lvn");
+
                 try {
-                    new File(".lvn/refs.json").createNewFile();                    
+                    new File(".lvn/refs.json").createNewFile();
+                    
+                    FileWriter refsJson = new FileWriter(".lvn/refs.json");
+                    refsJson.write("{}");
+                    refsJson.close();
                 } catch (Exception e) {
                     System.out.println("lvn: failed to create refs.json file.");
                 }
+
                 System.out.println("lvn: initialized repository.");
             }
         } else {
@@ -41,11 +50,17 @@ public class Versioner {
                 } else {
                     terminal.runCommand("mkdir " + directory + "/.lvn");
                     terminal.runCommand("mkdir objects", directory + "/.lvn");
+
                     try {
-                        new File(directory + "/.lvn/refs.json").createNewFile();                    
+                        new File(directory + "/.lvn/refs.json").createNewFile();
+
+                        FileWriter refsJson = new FileWriter(directory + "/.lvn/refs.json");
+                        refsJson.write("{}");
+                        refsJson.close();
                     } catch (Exception e) {
                         System.out.println("lvn: failed to create refs.json file.");
                     }
+
                     System.out.println("lvn: initialized repository.");
                 }
             } else {
@@ -76,11 +91,21 @@ public class Versioner {
             if (git.lsFiles(file).size() > 0) {
                 for (int i = 0; i < git.lsFiles(file).size(); i++) {
                     //use git log -p --reverse <file>
-                    System.out.println(git.lsFiles(file).get(i));
+                    // System.out.println(git.lsFiles(file).get(i));
+                    this.createLvnObject(file);
                 }
             }
         } else {
             System.out.println("lvn: this file does not exists.");
+        }
+    }
+
+    //method to just create file in .lvn/objects
+    public void createLvnObject(String file) {
+        if (new File(".lvn/refs.json").exists()) {
+            System.out.println("existe");
+        } else {
+            System.out.println("não existe");
         }
     }
 }
