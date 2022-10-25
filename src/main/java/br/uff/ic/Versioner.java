@@ -18,7 +18,7 @@ public class Versioner {
                 System.out.println("lvn: repository is already initialized.");
             } else {
                 terminal.runCommand("mkdir .lvn");
-                terminal.runCommand("mkdir versions", ".lvn");
+                terminal.runCommand("mkdir objects", ".lvn");
                 try {
                     new File(".lvn/refs.json").createNewFile();                    
                 } catch (Exception e) {
@@ -40,7 +40,7 @@ public class Versioner {
                     System.out.println("lvn: repository is already initialized.");
                 } else {
                     terminal.runCommand("mkdir " + directory + "/.lvn");
-                    terminal.runCommand("mkdir versions", directory + "/.lvn");
+                    terminal.runCommand("mkdir objects", directory + "/.lvn");
                     try {
                         new File(directory + "/.lvn/refs.json").createNewFile();                    
                     } catch (Exception e) {
