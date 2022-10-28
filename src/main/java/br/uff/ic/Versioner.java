@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 
 import java.util.List;
+import java.util.Scanner;
+
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class Versioner {
 
@@ -25,7 +29,7 @@ public class Versioner {
 
                 try {
                     new File(".lvn/refs.json").createNewFile();
-                    
+
                     FileWriter refsJson = new FileWriter(".lvn/refs.json");
                     refsJson.write("{}");
                     refsJson.close();
@@ -92,7 +96,11 @@ public class Versioner {
                 for (int i = 0; i < git.lsFiles(file).size(); i++) {
                     //use git log -p --reverse <file>
                     // System.out.println(git.lsFiles(file).get(i));
-                    this.createLvnObject(file);
+                    if (this.checkIfLvnObjectFromFileExists(file)) {
+                        System.out.println("Exists");
+                    } else {
+                        System.out.println("Not exists");
+                    }
                 }
             }
         } else {
@@ -100,12 +108,34 @@ public class Versioner {
         }
     }
 
-    //method to just create file in .lvn/objects
-    public void createLvnObject(String file) {
-        if (new File(".lvn/refs.json").exists()) {
-            System.out.println("existe");
-        } else {
-            System.out.println("não existe");
+    public boolean checkIfLvnObjectFromFileExists(String filePath) {
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/refs.json"));
+            String refsJsonString = "";
+
+            while (scanner.hasNext()){
+                refsJsonString = refsJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+            
+            JSONObject refsJsonObjects = new JSONObject(refsJsonString);
+            JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
+
+            for (int i = 0; i < refsJsonObjectsArray.length(); i++) {
+                JSONObject refFile = refsJsonObjectsArray.getJSONObject(i);
+                
+                if (filePath.equals(refFile.get("path"))) {
+                    if (new File(".lvn/objects/" + refFile.get("object") + ".json").exists()) {
+                        return true;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
         }
+
+        return false;
     }
 }

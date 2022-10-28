@@ -18,7 +18,7 @@ public class InputProcessor {
                 }
             } else {
                 switch (input[0]) {
-                    case "version":
+                    case "add":
                         if (input.length == 1) {
                             if (versioner.isLvnRepository()) {
                                 System.out.println("lvn: missing file for versioning.");
