@@ -89,14 +89,14 @@ public class Versioner {
         return false;
     }
 
-    public void createVersion(String file) {
+    public void addFileToVersioning(String file) {
         if (new File(file).exists()) {
             //check if file is versioned by git
             if (git.lsFiles(file).size() > 0) {
                 for (int i = 0; i < git.lsFiles(file).size(); i++) {
                     //use git log -p --reverse <file>
                     // System.out.println(git.lsFiles(file).get(i));
-                    if (this.checkIfLvnObjectFromFileExists(file)) {
+                    if (this.checkIfLvnObjectFromFileExists(git.lsFiles(file).get(i))) {
                         System.out.println("Exists");
                     } else {
                         System.out.println("Not exists");

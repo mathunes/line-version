@@ -25,7 +25,7 @@ public class InputProcessor {
                             }
                         } else if (input.length == 2) {
                             if (versioner.isLvnRepository()) {
-                                versioner.createVersion(input[1]);                        
+                                versioner.addFileToVersioning(input[1]);                        
                             }
                         } else if (input.length == 3) {
                             // if (versioner.isLvnRepository(input[1])) {
