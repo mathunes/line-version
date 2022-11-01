@@ -32,7 +32,7 @@ public class Versioner {
                     new File(".lvn/refs.json").createNewFile();
 
                     FileWriter refsJson = new FileWriter(".lvn/refs.json");
-                    refsJson.write("{}");
+                    refsJson.write("{\"objects\": []}");
                     refsJson.close();
                 } catch (Exception e) {
                     System.out.println("lvn: failed to create refs.json file.");
@@ -60,7 +60,7 @@ public class Versioner {
                         new File(directory + "/.lvn/refs.json").createNewFile();
 
                         FileWriter refsJson = new FileWriter(directory + "/.lvn/refs.json");
-                        refsJson.write("{}");
+                        refsJson.write("{\"objects\": []}");
                         refsJson.close();
                     } catch (Exception e) {
                         System.out.println("lvn: failed to create refs.json file.");
@@ -100,7 +100,13 @@ public class Versioner {
                     if (this.checkIfLvnObjectFromFileExists(git.lsFiles(file).get(i))) {
                         System.out.println("lvn: " + git.lsFiles(file).get(i) + " is already versioned.");
                     } else {
-                        this.createLvnObjectToFile(git.lsFiles(file).get(i));
+                        String lvnObjectName = this.createLvnObjectToFile(git.lsFiles(file).get(i));
+
+                        if (lvnObjectName.isEmpty()) {
+                            System.out.println("lvn: failed to create object to file: " + git.lsFiles(file).get(i));
+                        } else {        
+                            createVersioningForObjectFile(lvnObjectName);
+                        }
                     }
                 }
             }
@@ -140,7 +146,7 @@ public class Versioner {
         return false;
     }
 
-    public void createLvnObjectToFile(String filePath) {
+    public String createLvnObjectToFile(String filePath) {
         try {
             Scanner scanner = new Scanner(new File(".lvn/refs.json"));
             String refsJsonString = "";
@@ -155,9 +161,9 @@ public class Versioner {
             JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
             
             UUID uuid = UUID.randomUUID();
-            String uuidAsString = uuid.toString();
+            String lvnObjectName = uuid.toString();
 
-            JSONObject newLvnObject = new JSONObject().put("path", filePath).put("object", uuidAsString);
+            JSONObject newLvnObject = new JSONObject().put("path", filePath).put("object", lvnObjectName);
             
             refsJsonObjectsArray.put(newLvnObject);
 
@@ -165,12 +171,18 @@ public class Versioner {
             refsJsonFile.write("{\"objects\": " + refsJsonObjectsArray.toString(4) +  "}");
             refsJsonFile.close();
 
-            new File(".lvn/objects/" + uuidAsString + ".json").createNewFile();
+            new File(".lvn/objects/" + lvnObjectName + ".json").createNewFile();
 
-            //return file name
+           return lvnObjectName;
 
         } catch (Exception e) {
             System.out.println("lvn: " + e);
         }
+        
+        return "";
+    }
+
+    public void createVersioningForObjectFile(String objectName) {
+        System.out.println(objectName);
     }
 }
