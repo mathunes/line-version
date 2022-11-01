@@ -5,6 +5,7 @@ import java.io.FileWriter;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -97,9 +98,9 @@ public class Versioner {
                     //use git log -p --reverse <file>
                     // System.out.println(git.lsFiles(file).get(i));
                     if (this.checkIfLvnObjectFromFileExists(git.lsFiles(file).get(i))) {
-                        System.out.println("Exists");
+                        System.out.println("lvn: " + git.lsFiles(file).get(i) + " is already versioned.");
                     } else {
-                        System.out.println("Not exists");
+                        this.createLvnObjectToFile(git.lsFiles(file).get(i));
                     }
                 }
             }
@@ -137,5 +138,34 @@ public class Versioner {
         }
 
         return false;
+    }
+
+    public void createLvnObjectToFile(String filePath) {
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/refs.json"));
+            String refsJsonString = "";
+
+            while (scanner.hasNext()){
+                refsJsonString = refsJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+            
+            JSONObject refsJsonObjects = new JSONObject(refsJsonString);
+            JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
+            
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+
+            JSONObject newLvnObject = new JSONObject().put("path", filePath).put("object", uuidAsString);
+            
+            refsJsonObjectsArray.put(newLvnObject);
+
+            FileWriter refsJsonFile = new FileWriter(".lvn/refs.json");
+            refsJsonFile.write("{\"objects\": " + refsJsonObjectsArray.toString(4) +  "}");
+            refsJsonFile.close();
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+        }
     }
 }
