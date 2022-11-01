@@ -164,6 +164,11 @@ public class Versioner {
             FileWriter refsJsonFile = new FileWriter(".lvn/refs.json");
             refsJsonFile.write("{\"objects\": " + refsJsonObjectsArray.toString(4) +  "}");
             refsJsonFile.close();
+
+            new File(".lvn/objects/" + uuidAsString + ".json").createNewFile();
+
+            //return file name
+
         } catch (Exception e) {
             System.out.println("lvn: " + e);
         }
