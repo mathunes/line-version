@@ -16,10 +16,16 @@ public class Git {
 		return terminal.runCommand(gitCommand, directory);
 	}
 
-	public List<String> lsFiles(String file) {
+	public List<String> lsFiles(String filePath) {
 		Terminal terminal = new Terminal();
-		String gitCommand = "git ls-files " + file;
+		String gitCommand = "git ls-files " + filePath;
 		return terminal.runCommand(gitCommand);
+	}
+
+	public List<String> logPReverse(String filePath) {
+		Terminal terminal = new Terminal();
+		String gitCommand = "git log -p --reverse " + filePath;
+		return terminal.runCommand(gitCommand);	
 	}
 
 }

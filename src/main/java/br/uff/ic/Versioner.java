@@ -105,7 +105,7 @@ public class Versioner {
                         if (lvnObjectName.isEmpty()) {
                             System.out.println("lvn: failed to create object to file: " + git.lsFiles(file).get(i));
                         } else {        
-                            createVersioningForObjectFile(lvnObjectName);
+                            createVersioningForObjectFile(git.lsFiles(file).get(i), lvnObjectName);
                         }
                     }
                 }
@@ -182,7 +182,17 @@ public class Versioner {
         return "";
     }
 
-    public void createVersioningForObjectFile(String objectName) {
-        System.out.println(objectName);
+    public void createVersioningForObjectFile(String filePath, String objectName) {
+        List<String> log = git.logPReverse(filePath);
+
+        for (int i = 0; i < log.size(); i++)
+            System.out.println(log.get(i));
+        
+        // Para cada commit 
+        //     obter author
+        //     obter date
+        //     obter commit-message
+        //     Para cada @@
+        //         Voltar no primeiro indice (se for diferente de 0) de cada range e apliar a operação
     }
 }
