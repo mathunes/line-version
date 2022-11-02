@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Versioner {
 
@@ -95,8 +95,6 @@ public class Versioner {
             //check if file is versioned by git
             if (git.lsFiles(file).size() > 0) {
                 for (int i = 0; i < git.lsFiles(file).size(); i++) {
-                    //use git log -p --reverse <file>
-                    // System.out.println(git.lsFiles(file).get(i));
                     if (this.checkIfLvnObjectFromFileExists(git.lsFiles(file).get(i))) {
                         System.out.println("lvn: " + git.lsFiles(file).get(i) + " is already versioned.");
                     } else {
@@ -183,11 +181,21 @@ public class Versioner {
     }
 
     public void createVersioningForObjectFile(String filePath, String objectName) {
-        List<String> log = git.logPReverse(filePath);
+        List<String> logList = git.logPReverse(filePath);
+        String commitAuthor = "";
+        String commitDate = "";
+        String commitMessage = "";
 
-        for (int i = 0; i < log.size(); i++)
-            System.out.println(log.get(i));
-        
+        for (String logLine : logList) {
+            if (logLine.startsWith("Author: ")) {
+                commitAuthor = logLine.replace("Author: ", "");
+            } else if (logLine.startsWith("Date: ")) {
+                commitDate = logLine.replace("Date: ", "");
+            }
+
+            System.out.println("Author: " + commitAuthor + " Date: " + commitDate);
+        }
+
         // Para cada commit 
         //     obter author
         //     obter date
