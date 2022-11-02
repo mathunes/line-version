@@ -3,6 +3,8 @@ package br.uff.ic;
 import java.io.File;
 import java.io.FileWriter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -171,7 +173,11 @@ public class Versioner {
 
             new File(".lvn/objects/" + lvnObjectName + ".json").createNewFile();
 
-           return lvnObjectName;
+            FileWriter objectJsonFile = new FileWriter(".lvn/objects/" + lvnObjectName + ".json");
+            objectJsonFile.write("{\"lines\": []}");
+            objectJsonFile.close();
+
+            return lvnObjectName;
 
         } catch (Exception e) {
             System.out.println("lvn: " + e);
@@ -186,21 +192,57 @@ public class Versioner {
         String commitDate = "";
         String commitMessage = "";
 
-        for (String logLine : logList) {
-            if (logLine.startsWith("Author: ")) {
-                commitAuthor = logLine.replace("Author: ", "");
-            } else if (logLine.startsWith("Date: ")) {
-                commitDate = logLine.replace("Date: ", "");
+        List<String> rangeSubtraction;
+        List<String> rangeAddition; 
+
+        for (int i = 0; i < logList.size(); i++) {
+
+            if (logList.get(i).startsWith("commit ")) {
+                commitAuthor = logList.get(i + 1);
+                commitDate = logList.get(i + 2);
+                commitMessage = logList.get(i + 4);
+
+                i = i + 5;
             }
 
-            System.out.println("Author: " + commitAuthor + " Date: " + commitDate);
+            if (logList.get(i).startsWith("@@")) {
+                String[] ranges = logList.get(i)
+                    .replaceAll("@@ ", "")
+                    .replaceAll(" @@", "")
+                    .split(" ");
+
+                rangeSubtraction = new ArrayList(Arrays.asList(ranges[0]
+                    .replace("-", "")
+                    .split(",")));
+
+                if (rangeSubtraction.size() == 1) {
+                    rangeSubtraction.add(0, "0");
+                }
+
+                rangeAddition = new ArrayList(Arrays.asList(ranges[1]
+                    .replace("+", "")
+                    .split(",")));
+
+                if (rangeAddition.size() == 1) {
+                    rangeAddition.add(0, "0");
+                }
+
+                //Apply version subtration
+                // for (int j = Integer.parseInt(rangeSubtraction.get(0)); j < Integer.parseInt(rangeSubtraction.get(1)); j++) {
+                //     while (!logList.get(i).equals("\\ No newline at end of file")) {
+                //         System.out.println(logList.get(i));
+                //         i++;
+                //     }
+                //     break;
+                // }
+
+                //Apply version addition
+
+                System.out.println("rangeSubtraction: " + rangeSubtraction.toString());
+                System.out.println("rangeAddition: " + rangeAddition.toString());
+            }
+
         }
 
-        // Para cada commit 
-        //     obter author
-        //     obter date
-        //     obter commit-message
-        //     Para cada @@
-        //         Voltar no primeiro indice (se for diferente de 0) de cada range e apliar a operação
     }
 }
