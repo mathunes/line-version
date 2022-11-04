@@ -187,62 +187,12 @@ public class Versioner {
     }
 
     public void createVersioningForObjectFile(String filePath, String objectName) {
-        List<String> logList = git.logPReverse(filePath);
-        String commitAuthor = "";
-        String commitDate = "";
-        String commitMessage = "";
-
-        List<String> rangeSubtraction;
-        List<String> rangeAddition; 
-
-        for (int i = 0; i < logList.size(); i++) {
-
-            if (logList.get(i).startsWith("commit ")) {
-                commitAuthor = logList.get(i + 1);
-                commitDate = logList.get(i + 2);
-                commitMessage = logList.get(i + 4);
-
-                i = i + 5;
-            }
-
-            if (logList.get(i).startsWith("@@")) {
-                String[] ranges = logList.get(i)
-                    .replaceAll("@@ ", "")
-                    .replaceAll(" @@", "")
-                    .split(" ");
-
-                rangeSubtraction = new ArrayList(Arrays.asList(ranges[0]
-                    .replace("-", "")
-                    .split(",")));
-
-                if (rangeSubtraction.size() == 1) {
-                    rangeSubtraction.add(0, "0");
-                }
-
-                rangeAddition = new ArrayList(Arrays.asList(ranges[1]
-                    .replace("+", "")
-                    .split(",")));
-
-                if (rangeAddition.size() == 1) {
-                    rangeAddition.add(0, "0");
-                }
-
-                //Apply version subtration
-                // for (int j = Integer.parseInt(rangeSubtraction.get(0)); j < Integer.parseInt(rangeSubtraction.get(1)); j++) {
-                //     while (!logList.get(i).equals("\\ No newline at end of file")) {
-                //         System.out.println(logList.get(i));
-                //         i++;
-                //     }
-                //     break;
-                // }
-
-                //Apply version addition
-
-                System.out.println("rangeSubtraction: " + rangeSubtraction.toString());
-                System.out.println("rangeAddition: " + rangeAddition.toString());
-            }
-
-        }
-
+        List<String> logList = git.logReverse(filePath);
+        
+        //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
+        //for each commit
+            //get complete content from file with git show <commit>:file-path
+        //for each line from file
+            //put in lvn object
     }
 }
