@@ -5,7 +5,7 @@ public class CommitInfo {
     private String hash;
     private String author;
     private String date;
-    private String commitMessage;
+    private String message;
 
     public String getHash() {
         return this.hash;
@@ -31,12 +31,12 @@ public class CommitInfo {
         this.date = date;
     }
 
-    public String getCommitMessage() {
-        return this.commitMessage;
+    public String getMessage() {
+        return this.message;
     }
 
-    public void setCommitMessage(String commitMessage) {
-        this.commitMessage = commitMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }
