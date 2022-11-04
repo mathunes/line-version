@@ -25,8 +25,8 @@ public class Git {
 		return this.terminal.runCommand(gitCommand);
 	}
 
-	public List<String> logPReverse(String filePath) {
-		String gitCommand = "git log -p --reverse " + filePath;
+	public List<String> logReverse(String filePath) {
+		String gitCommand = "git log --reverse " + filePath;
 		return this.terminal.runCommand(gitCommand);	
 	}
 
