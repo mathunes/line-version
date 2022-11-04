@@ -186,8 +186,40 @@ public class Versioner {
         return "";
     }
 
-    public void createVersioningForObjectFile(String filePath, String objectName) {
+    public List<CommitInfo> getCommitsInfoFromFile(String filePath) {
         List<String> logList = git.logReverse(filePath);
+        List<CommitInfo> commitInfoList = new ArrayList();
+        
+        for (int i = 0; i < logList.size(); i++) {
+
+            if (logList.get(i).startsWith("commit ")) {
+                CommitInfo commitInfo = new CommitInfo();
+
+                commitInfo.setHash(logList.get(i).replace("commit ", ""));
+                commitInfo.setAuthor(logList.get(i + 1).replace("Author: ", ""));
+                commitInfo.setDate(logList.get(i + 2).replace("Date:   ", ""));
+                commitInfo.setCommitMessage(logList.get(i + 4).trim());
+
+                i+=5;
+
+                commitInfoList.add(commitInfo);
+            }
+        }
+
+        return commitInfoList;
+    }
+
+    public void createVersioningForObjectFile(String filePath, String objectName) {
+        // List<String> logList = git.logReverse(filePath);
+
+        List<CommitInfo> commitInfoList = this.getCommitsInfoFromFile(filePath);
+
+        for (int i = 0; i < commitInfoList.size(); i++) {
+            System.out.println(commitInfoList.get(i).getHash());
+            System.out.println(commitInfoList.get(i).getAuthor());
+            System.out.println(commitInfoList.get(i).getDate());
+            System.out.println(commitInfoList.get(i).getCommitMessage());
+        }
         
         //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
         //for each commit
