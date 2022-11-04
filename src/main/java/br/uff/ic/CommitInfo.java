@@ -1,10 +1,20 @@
+package br.uff.ic;
+
 public class CommitInfo {
     
+    private String hash;
     private String author;
     private String date;
     private String commitMessage;
-    private String content;
 
+    public String getHash() {
+        return this.hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+    
     public String getAuthor() {
         return this.author;
     }
@@ -29,12 +39,4 @@ public class CommitInfo {
         this.commitMessage = commitMessage;
     }
 
-    public String getContent() {
-        return this.content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    
 }
