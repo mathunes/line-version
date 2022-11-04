@@ -30,4 +30,9 @@ public class Git {
 		return this.terminal.runCommand(gitCommand);	
 	}
 
+	public List<String> showCompleteFileByCommit(String filePath, String commit) {
+		String gitCommand = "git show " + commit + ":" + filePath;
+		return this.terminal.runCommand(gitCommand);
+	}
+
 }
