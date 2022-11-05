@@ -198,7 +198,7 @@ public class Versioner {
                 commitInfo.setHash(logList.get(i).replace("commit ", ""));
                 commitInfo.setAuthor(logList.get(i + 1).replace("Author: ", ""));
                 commitInfo.setDate(logList.get(i + 2).replace("Date:   ", ""));
-                commitInfo.setCommitMessage(logList.get(i + 4).trim());
+                commitInfo.setMessage(logList.get(i + 4).trim());
 
                 i+=5;
 
@@ -210,15 +210,62 @@ public class Versioner {
     }
 
     public void createVersioningForObjectFile(String filePath, String objectName) {
-        // List<String> logList = git.logReverse(filePath);
-
         List<CommitInfo> commitInfoList = this.getCommitsInfoFromFile(filePath);
 
-        for (int i = 0; i < commitInfoList.size(); i++) {
-            System.out.println(commitInfoList.get(i).getHash());
-            System.out.println(commitInfoList.get(i).getAuthor());
-            System.out.println(commitInfoList.get(i).getDate());
-            System.out.println(commitInfoList.get(i).getCommitMessage());
+        String hash = "";
+        String author = "";
+        String date = "";
+        String message = "";
+
+        //for each commit
+        // for (int i = 0; i < commitInfoList.size(); i++) {
+        for (int i = 0; i < 1; i++) {
+
+            hash = commitInfoList.get(i).getHash();
+            author = commitInfoList.get(i).getAuthor();
+            date = commitInfoList.get(i).getDate();
+            message = commitInfoList.get(i).getMessage();
+
+            List<String> fileByCommit = git.showCompleteFileByCommit(filePath, hash);
+
+            try {
+                Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+                String objectJsonString = "";
+
+                while (scanner.hasNext()){
+                    objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+                }
+
+                scanner.close();
+
+                JSONObject objectJsonObjects = new JSONObject(objectJsonString);
+                JSONArray objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+
+                //first version
+                if (objectJsonLinesArray.length() == 0) {
+                    //for each file line
+                    for (int j = 0; j < fileByCommit.size(); j++) {
+                        String content2 = "\"content\": \""+ fileByCommit.get(j).replaceAll("\"", "\\\\\"").replaceAll("\n", "") +"\",";
+                        String author2 = "\"author\": \""+ author.replaceAll("\n", "") +"\",";
+                        String date2 = "\"date\": \""+ date.replaceAll("\n", "") +"\",";
+                        String message2 = "\"message\": \""+ message.replaceAll("\n", "") +"\",";
+                        String hash2 = "\"hash\": \""+ hash.replaceAll("\n", "") +"\"";
+   
+                        JSONObject lineObject = new JSONObject("{\"1\":" + 
+                            new JSONObject("{" + content2 + author2 + date2 + message2 + hash2 + "}") + "}");
+
+                        objectJsonLinesArray.put(lineObject);
+                    }
+
+                    System.out.println(objectJsonLinesArray.toString());
+                    
+                } else {
+
+                }
+
+            } catch (Exception e) {
+                System.out.println("lvn: " + e);
+            }
         }
         
         //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
