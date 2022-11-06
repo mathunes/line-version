@@ -217,9 +217,28 @@ public class Versioner {
         String date = "";
         String message = "";
 
+        JSONObject objectJsonObjects;
+        JSONArray objectJsonLinesArray;
+
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+            String objectJsonString = "";
+
+            while (scanner.hasNext()){
+                objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+
+            objectJsonObjects = new JSONObject(objectJsonString);
+            objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+            return;
+        }
+
         //for each commit
-        // for (int i = 0; i < commitInfoList.size(); i++) {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < commitInfoList.size(); i++) {
 
             hash = commitInfoList.get(i).getHash();
             author = commitInfoList.get(i).getAuthor();
@@ -228,50 +247,64 @@ public class Versioner {
 
             List<String> fileByCommit = git.showCompleteFileByCommit(filePath, hash);
 
-            try {
-                Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-                String objectJsonString = "";
+            //first version
+            if (objectJsonLinesArray.length() == 0) {
+                
+                //for each file line
+                for (int j = 0; j < fileByCommit.size(); j++) {   
+                    JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
 
-                while (scanner.hasNext()){
-                    objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+                    JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+
+                    objectJsonLinesArray.put(lineArray.toString());
                 }
 
-                scanner.close();
+                System.out.println(objectJsonLinesArray.toString());
 
-                JSONObject objectJsonObjects = new JSONObject(objectJsonString);
-                JSONArray objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+            } else {
+                int numberOfLinesAlreadyVersioned = objectJsonLinesArray.length();
 
-                //first version
-                if (objectJsonLinesArray.length() == 0) {
-                    //for each file line
-                    for (int j = 0; j < fileByCommit.size(); j++) {
-                        String content2 = "\"content\": \""+ fileByCommit.get(j).replaceAll("\"", "\\\\\"").replaceAll("\n", "") +"\",";
-                        String author2 = "\"author\": \""+ author.replaceAll("\n", "") +"\",";
-                        String date2 = "\"date\": \""+ date.replaceAll("\n", "") +"\",";
-                        String message2 = "\"message\": \""+ message.replaceAll("\n", "") +"\",";
-                        String hash2 = "\"hash\": \""+ hash.replaceAll("\n", "") +"\"";
-   
-                        JSONObject lineObject = new JSONObject("{\"1\":" + 
-                            new JSONObject("{" + content2 + author2 + date2 + message2 + hash2 + "}") + "}");
+                System.out.println("COMMIT " + hash);
 
-                        objectJsonLinesArray.put(lineObject);
-                    }
-
-                    System.out.println(objectJsonLinesArray.toString());
+                for (int j = 0; j < fileByCommit.size(); j++) {
                     
-                } else {
+                    if (j < numberOfLinesAlreadyVersioned) {
+                        JSONArray objectJsonLineArray = new JSONArray(objectJsonLinesArray.getString(j));
+                        String contentLine = objectJsonLineArray.getJSONObject(objectJsonLineArray.length() - 1).getString("content");
+                  
+                        System.out.println(contentLine);
 
+                        if (!fileByCommit.get(j).equals(contentLine)) {
+                            // JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+
+                            // JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+
+                            // objectJsonLineArray.put("{" + lineArray + "}");
+
+                            // objectJsonLinesArray.put(objectJsonLineArray.toString());
+
+                        }
+
+                    }
+                    
+                    // 
+                    //if fileByCommit size > numberOfLinesAlreadyVersioned then mark with DELETED
                 }
-
-            } catch (Exception e) {
-                System.out.println("lvn: " + e);
             }
+
         }
         
         //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
         //for each commit
             //get complete content from file with git show <commit>:file-path
-        //for each line from file
-            //put in lvn object
+                //lvn object is void
+                    //for each line from file
+                        //put line in lvn object
+                //lvn object is not void
+                    //for each line from file
+                        //if line is already in lvn object
+                            //continue
+                        //if line is replaced in lvn object
+                            //append
     }
 }
