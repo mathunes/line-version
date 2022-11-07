@@ -279,11 +279,37 @@ public class Versioner {
 
                         }
 
+                    } else {
+
+                        JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+
+                        JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+    
+                        objectJsonLinesArray.put(lineArray.toString());
+                        
                     }
                     
-                    // 
-                    //if fileByCommit size > numberOfLinesAlreadyVersioned then mark with DELETED
                 }
+
+               
+                if (fileByCommit.size() < numberOfLinesAlreadyVersioned) {
+
+                    for (int j = fileByCommit.size(); j < numberOfLinesAlreadyVersioned; j++) {
+
+                        JSONArray lineArray = new JSONArray(objectJsonLinesArray.getString(j));
+
+                        if (!(lineArray.getJSONObject(lineArray.length() - 1)).get("content").equals("<lvn>DELETED</lvn>")) {
+                            JSONObject lineObject = commitInfoList.get(i).getLineObject("<lvn>DELETED</lvn>");
+                        
+                            lineArray.put(lineObject);
+
+                            objectJsonLinesArray.put(j, lineArray.toString());
+                        }
+
+                    }
+
+                }
+
             }
 
         }
@@ -292,10 +318,10 @@ public class Versioner {
             FileWriter objectJson = new FileWriter(".lvn/objects/" + objectName + ".json");
             objectJson.write("{\"lines\": [");
 
-            for (int p = 0; p < objectJsonLinesArray.length(); p++) {
-                objectJson.write(objectJsonLinesArray.getString(p));
+            for (int k = 0; k < objectJsonLinesArray.length(); k++) {
+                objectJson.write(objectJsonLinesArray.getString(k));
 
-                if (p < objectJsonLinesArray.length() - 1) {
+                if (k < objectJsonLinesArray.length() - 1) {
                     objectJson.write(",");
                 }
             }
@@ -307,17 +333,5 @@ public class Versioner {
             System.out.println("lvn: " + e);
         }
 
-        //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
-        //for each commit
-            //get complete content from file with git show <commit>:file-path
-                //lvn object is void
-                    //for each line from file
-                        //put line in lvn object
-                //lvn object is not void
-                    //for each line from file
-                        //if line is already in lvn object
-                            //continue
-                        //if line is replaced in lvn object
-                            //append
     }
 }
