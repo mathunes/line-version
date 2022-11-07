@@ -259,29 +259,23 @@ public class Versioner {
                     objectJsonLinesArray.put(lineArray.toString());
                 }
 
-                System.out.println(objectJsonLinesArray.toString());
-
             } else {
                 int numberOfLinesAlreadyVersioned = objectJsonLinesArray.length();
 
-                System.out.println("COMMIT " + hash);
-
+                //for each file line
                 for (int j = 0; j < fileByCommit.size(); j++) {
                     
                     if (j < numberOfLinesAlreadyVersioned) {
                         JSONArray objectJsonLineArray = new JSONArray(objectJsonLinesArray.getString(j));
                         String contentLine = objectJsonLineArray.getJSONObject(objectJsonLineArray.length() - 1).getString("content");
-                  
-                        System.out.println(contentLine);
+                        
+                        if (!(fileByCommit.get(j).equals(contentLine))) {
 
-                        if (!fileByCommit.get(j).equals(contentLine)) {
-                            // JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+                            JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
 
-                            // JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+                            objectJsonLineArray.put(lineObject);
 
-                            // objectJsonLineArray.put("{" + lineArray + "}");
-
-                            // objectJsonLinesArray.put(objectJsonLineArray.toString());
+                            objectJsonLinesArray.put(j, objectJsonLineArray.toString());
 
                         }
 
@@ -293,7 +287,26 @@ public class Versioner {
             }
 
         }
-        
+
+        try {
+            FileWriter objectJson = new FileWriter(".lvn/objects/" + objectName + ".json");
+            objectJson.write("{\"lines\": [");
+
+            for (int p = 0; p < objectJsonLinesArray.length(); p++) {
+                objectJson.write(objectJsonLinesArray.getString(p));
+
+                if (p < objectJsonLinesArray.length() - 1) {
+                    objectJson.write(",");
+                }
+            }
+
+            objectJson.write("]}");
+
+            objectJson.close();
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+        }
+
         //get commit info from log (Add in CommitInfo class and append in a List<CommitInfo>)
         //for each commit
             //get complete content from file with git show <commit>:file-path
