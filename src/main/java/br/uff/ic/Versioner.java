@@ -317,6 +317,8 @@ public class Versioner {
 
             objectJson.write("]}");
             objectJson.close();
+
+            System.out.println("lvn: versioning created for " + filePath);
         } catch (Exception e) {
             System.out.println("lvn: " + e);
         }
