@@ -16,6 +16,7 @@ public class Versioner {
 
     private Git git;
     private Terminal terminal;
+    private static String TAG_LVN_DELETED = "<lvn>DELETED</lvn>";
 
     public Versioner() {
         git = new Git();
@@ -270,48 +271,36 @@ public class Versioner {
                         String contentLine = objectJsonLineArray.getJSONObject(objectJsonLineArray.length() - 1).getString("content");
                         
                         if (!(fileByCommit.get(j).equals(contentLine))) {
-
                             JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
 
                             objectJsonLineArray.put(lineObject);
 
                             objectJsonLinesArray.put(j, objectJsonLineArray.toString());
-
                         }
-
                     } else {
-
                         JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
 
                         JSONArray lineArray = new JSONArray("[" + lineObject + "]");
     
                         objectJsonLinesArray.put(lineArray.toString());
-                        
                     }
-                    
                 }
 
                
                 if (fileByCommit.size() < numberOfLinesAlreadyVersioned) {
-
                     for (int j = fileByCommit.size(); j < numberOfLinesAlreadyVersioned; j++) {
-
                         JSONArray lineArray = new JSONArray(objectJsonLinesArray.getString(j));
 
-                        if (!(lineArray.getJSONObject(lineArray.length() - 1)).get("content").equals("<lvn>DELETED</lvn>")) {
-                            JSONObject lineObject = commitInfoList.get(i).getLineObject("<lvn>DELETED</lvn>");
+                        if (!(lineArray.getJSONObject(lineArray.length() - 1)).get("content").equals(TAG_LVN_DELETED)) {
+                            JSONObject lineObject = commitInfoList.get(i).getLineObject(TAG_LVN_DELETED);
                         
                             lineArray.put(lineObject);
 
                             objectJsonLinesArray.put(j, lineArray.toString());
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         try {
@@ -327,11 +316,9 @@ public class Versioner {
             }
 
             objectJson.write("]}");
-
             objectJson.close();
         } catch (Exception e) {
             System.out.println("lvn: " + e);
         }
-
     }
 }
