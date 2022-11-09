@@ -33,6 +33,19 @@ public class InputProcessor {
                             // }
                         }
                         break;
+                    case "info":
+                        if (input.length == 1) {
+                            if (versioner.isLvnRepository()) {
+                                System.out.println("lvn: missing file path to get version.");
+                            }
+                        } else if (input.length == 2) {
+                            if (versioner.isLvnRepository()) {
+                                versioner.getLinesInfoFromFile(input[1]);
+                            }
+                        } else {
+                            System.out.println("lvn: many parameters informed.");
+                        }
+                        break;
                     default:
                         System.out.println("lvn: " + input[0] + " is not a lvn command.");
                         break;

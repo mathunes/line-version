@@ -323,4 +323,93 @@ public class Versioner {
             System.out.println("lvn: " + e);
         }
     }
+
+    public void getLinesInfoFromFile(String filePath) {
+
+        if (new File(filePath).exists()) {
+            if (this.checkIfLvnObjectFromFileExists(filePath)) {
+
+                String objectName = this.getLvnObjectFromFile(filePath);
+
+                System.out.println(objectName);
+
+                //Create method for this
+                JSONObject objectJsonObjects;
+                JSONArray objectJsonLinesArray;
+
+                try {
+                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+                    String objectJsonString = "";
+
+                    while (scanner.hasNext()){
+                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+                    }
+
+                    scanner.close();
+
+                    objectJsonObjects = new JSONObject(objectJsonString);
+                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+                } catch (Exception e) {
+                    System.out.println("lvn: " + e);
+                    return;
+                }
+
+                JSONArray jsonLineArray;
+                JSONObject jsonVersion;
+
+                for (int i = 0; i < objectJsonLinesArray.length(); i++) {
+                    
+                    jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(i));
+
+                    System.out.println("LINE " + (i+1) + ":");
+                    for (int j = 0; j < jsonLineArray.length(); j++) {
+                        System.out.println("\tVERSION " + (j+1) + ": ");
+
+                        System.out.println("\t\tCONTENT: " + jsonLineArray.getJSONObject(j).getString("content"));
+                        System.out.println("\t\tAUTHOR: " + jsonLineArray.getJSONObject(j).getString("author"));
+                        System.out.println("\t\tDATE: " + jsonLineArray.getJSONObject(j).getString("date"));
+                        System.out.println("\t\tMESSAGE: " + jsonLineArray.getJSONObject(j).getString("message"));
+                        System.out.println("\t\tHASH COMMIT: " + jsonLineArray.getJSONObject(j).getString("hash"));
+
+                    }
+                }
+            } else {
+                System.out.println("lvn: this file is not versioned by lvn.");
+            }
+        } else {
+            System.out.println("lvn: this file does not exists.");
+        }
+    }
+
+    public String getLvnObjectFromFile(String filePath) {
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/refs.json"));
+            String refsJsonString = "";
+
+            while (scanner.hasNext()){
+                refsJsonString = refsJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+            
+            JSONObject refsJsonObjects = new JSONObject(refsJsonString);
+            JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
+
+            for (int i = 0; i < refsJsonObjectsArray.length(); i++) {
+                JSONObject refFile = refsJsonObjectsArray.getJSONObject(i);
+                
+                if (filePath.equals(refFile.get("path"))) {
+                    if (new File(".lvn/objects/" + refFile.get("object") + ".json").exists()) {
+                        return refFile.get("object").toString();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+        }
+
+        return "";
+    }
+
 }
