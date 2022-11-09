@@ -13,8 +13,10 @@ public class InputProcessor {
             if (input[0].equals("init")) {
                 if (input.length == 2) {
                     versioner.init(input[1]);
-                } else {
+                } else if (input.length == 1) {
                     versioner.init();
+                } else {
+                    System.out.println("lvn: many parameters informed.");
                 }
             } else {
                 switch (input[0]) {
