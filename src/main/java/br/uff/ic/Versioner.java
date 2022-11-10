@@ -30,12 +30,13 @@ public class Versioner {
             } else {
                 terminal.runCommand("mkdir .lvn");
                 terminal.runCommand("mkdir objects", ".lvn");
+                int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
                 try {
                     new File(".lvn/refs.json").createNewFile();
 
                     FileWriter refsJson = new FileWriter(".lvn/refs.json");
-                    refsJson.write("{\"objects\": []}");
+                    refsJson.write("{\"objects\": [], \"number-of-commits\":" + numberOfCommits + "}");
                     refsJson.close();
                 } catch (Exception e) {
                     System.out.println("lvn: failed to create refs.json file.");
@@ -58,12 +59,13 @@ public class Versioner {
                 } else {
                     terminal.runCommand("mkdir " + directory + "/.lvn");
                     terminal.runCommand("mkdir objects", directory + "/.lvn");
+                    int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
                     try {
                         new File(directory + "/.lvn/refs.json").createNewFile();
 
                         FileWriter refsJson = new FileWriter(directory + "/.lvn/refs.json");
-                        refsJson.write("{\"objects\": []}");
+                        refsJson.write("{\"objects\": [], \"number-of-commits\":" + numberOfCommits + "}");
                         refsJson.close();
                     } catch (Exception e) {
                         System.out.println("lvn: failed to create refs.json file.");
@@ -160,6 +162,7 @@ public class Versioner {
             
             JSONObject refsJsonObjects = new JSONObject(refsJsonString);
             JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
+            int numberOfCommits = refsJsonObjects.getInt("number-of-commits");
             
             UUID uuid = UUID.randomUUID();
             String lvnObjectName = uuid.toString();
@@ -169,7 +172,7 @@ public class Versioner {
             refsJsonObjectsArray.put(newLvnObject);
 
             FileWriter refsJsonFile = new FileWriter(".lvn/refs.json");
-            refsJsonFile.write("{\"objects\": " + refsJsonObjectsArray.toString(4) +  "}");
+            refsJsonFile.write("{\"objects\": " + refsJsonObjectsArray.toString(4) +  ", \"number-of-commits\": " + numberOfCommits + "}");
             refsJsonFile.close();
 
             new File(".lvn/objects/" + lvnObjectName + ".json").createNewFile();
