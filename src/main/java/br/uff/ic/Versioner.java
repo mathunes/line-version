@@ -442,7 +442,7 @@ public class Versioner {
                 JSONArray jsonLineArray;
                 JSONObject jsonVersion;
 
-                if ((lineNumber > 0) && (lineNumber < objectJsonLinesArray.length())) {    
+                if ((lineNumber >= 0) && (lineNumber < objectJsonLinesArray.length())) {    
                     jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
 
                     System.out.println("LINE " + (lineNumber+1) + ":");
@@ -497,7 +497,7 @@ public class Versioner {
                 JSONArray jsonLineArray;
                 JSONObject jsonVersion;
 
-                if ((lineNumber > 0) && (lineNumber < objectJsonLinesArray.length())) {    
+                if ((lineNumber >= 0) && (lineNumber < objectJsonLinesArray.length())) {    
                     jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
 
                     System.out.println("LINE " + (lineNumber+1) + ":");
