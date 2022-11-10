@@ -35,7 +35,7 @@ public class InputProcessor {
                             // }
                         }
                         break;
-                    case "info":
+                    case "show":
                         if (input.length == 1) {
                             if (versioner.isLvnRepository()) {
                                 System.out.println("lvn: missing file path to get version.");
