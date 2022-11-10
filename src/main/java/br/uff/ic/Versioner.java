@@ -467,4 +467,60 @@ public class Versioner {
         }        
     }
 
+    public void getLastLineVersionInfoFromFile(String filePath, int lineNumber) {
+        if (new File(filePath).exists()) {
+            if (this.checkIfLvnObjectFromFileExists(filePath)) {
+
+                String objectName = this.getLvnObjectFromFile(filePath);
+
+                //Create method for this
+                JSONObject objectJsonObjects;
+                JSONArray objectJsonLinesArray;
+
+                try {
+                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+                    String objectJsonString = "";
+
+                    while (scanner.hasNext()){
+                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+                    }
+
+                    scanner.close();
+
+                    objectJsonObjects = new JSONObject(objectJsonString);
+                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+                } catch (Exception e) {
+                    System.out.println("lvn: " + e);
+                    return;
+                }
+
+                JSONArray jsonLineArray;
+                JSONObject jsonVersion;
+
+                if ((lineNumber > 0) && (lineNumber < objectJsonLinesArray.length())) {    
+                    jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
+
+                    System.out.println("LINE " + (lineNumber+1) + ":");
+                    
+                    int lastLineVersion = jsonLineArray.length() - 1;
+
+                    System.out.println("\tVERSION " + (lastLineVersion + 1) + ": ");
+
+                    System.out.println("\t\tCONTENT: " + jsonLineArray.getJSONObject(lastLineVersion).getString("content"));
+                    System.out.println("\t\tAUTHOR: " + jsonLineArray.getJSONObject(lastLineVersion).getString("author"));
+                    System.out.println("\t\tDATE: " + jsonLineArray.getJSONObject(lastLineVersion).getString("date"));
+                    System.out.println("\t\tMESSAGE: " + jsonLineArray.getJSONObject(lastLineVersion).getString("message"));
+                    System.out.println("\t\tHASH COMMIT: " + jsonLineArray.getJSONObject(lastLineVersion).getString("hash"));
+
+                } else {
+                    System.out.println("lvn: invalid line number.");
+                }
+            } else {
+                System.out.println("lvn: this file is not versioned by lvn.");
+            }
+        } else {
+            System.out.println("lvn: this file does not exists.");
+        }        
+    }
+
 }

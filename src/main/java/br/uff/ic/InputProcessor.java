@@ -52,6 +52,18 @@ public class InputProcessor {
                                     System.out.println("lvn: invalid line number.");
                                 }
                             }
+                        } else if (input.length == 4) {
+                            if (versioner.isLvnRepository()) {
+                                if (input[2].matches("-?\\d+")) {
+                                    if (input[3].equals("-last")) {
+                                        versioner.getLastLineVersionInfoFromFile(input[1], Integer.parseInt(input[2]) -1);
+                                    } else {
+                                        System.out.println("lvn: many parameters informed.");
+                                    }
+                                } else {
+                                    System.out.println("lvn: invalid line number.");
+                                }
+                            }
                         } else {
                             System.out.println("lvn: many parameters informed.");
                         }
