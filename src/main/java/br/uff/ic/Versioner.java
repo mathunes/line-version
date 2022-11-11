@@ -108,7 +108,7 @@ public class Versioner {
                         if (lvnObjectName.isEmpty()) {
                             System.out.println("lvn: failed to create object to file: " + git.lsFiles(file).get(i));
                         } else {        
-                            createVersioningForObjectFile(git.lsFiles(file).get(i), lvnObjectName);
+                            createVersioningForObjectFile(git.lsFiles(file).get(i), lvnObjectName);                           
                         }
                     }
                 }
@@ -544,18 +544,22 @@ public class Versioner {
             int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
             if (numberOfCommitsInRefs != numberOfCommits) {
-                //delete all objects
-                terminal.runCommand("rm -rf .lvn/objects/*");
+                terminal.runCommand("rm -rf .lvn/objects/.");
 
-                try {
-                    FileWriter refsJson = new FileWriter(".lvn/refs.json");
-                    refsJson.write("{\"objects\": [], \"number-of-commits\":" + numberOfCommits + "}");
-                    refsJson.close();
-                } catch (Exception e) {
-                    System.out.println("lvn: failed to create refs.json file.");
+                File lvnObjectsDirectory = new File(".lvn/objects");      
+                String[] objectsArray;    
+                if (lvnObjectsDirectory.isDirectory()) {
+                    objectsArray = lvnObjectsDirectory.list();
+                    for (int i = 0; i < objectsArray.length; i++) {
+                        File objectFile = new File(lvnObjectsDirectory, objectsArray[i]); 
+                        objectFile.delete();
+                    }
                 }
+
+                FileWriter refsJson = new FileWriter(".lvn/refs.json");
+                refsJson.write("{\"objects\": [], \"number-of-commits\":" + numberOfCommits + "}");
+                refsJson.close();
                 
-                //run versioning to files already versioned again
                 for (int i = 0; i < refsJsonObjectsArray.length(); i++) {
                     JSONObject refFile = refsJsonObjectsArray.getJSONObject(i);
                     

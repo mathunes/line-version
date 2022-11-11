@@ -27,7 +27,7 @@ public class InputProcessor {
                             }
                         } else if (input.length == 2) {
                             if (versioner.isLvnRepository()) {
-                                versioner.addFileToVersioning(input[1]);                        
+                                versioner.addFileToVersioning(input[1]);
                             }
                         } else if (input.length == 3) {
                             // if (versioner.isLvnRepository(input[1])) {
@@ -72,6 +72,7 @@ public class InputProcessor {
                         if (versioner.isLvnRepository()) {
                             versioner.updateObjects();
                         }
+                        //test
                         break;
                     default:
                         System.out.println("lvn: " + input[0] + " is not a lvn command.");
