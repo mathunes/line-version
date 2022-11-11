@@ -6,7 +6,7 @@ LVN has a storage external to the standard Git storage, having its structure rep
 
 With this tool, the user can explore line-level versioning, being able to get the versions that have already existed for a specific line or for all lines of a given file.
 
-The tool was proposed and developed as a partial requirement for concluding the Project Management course taught by professor [Leonardo Murta](https://github.com/leomurta) for the graduate course at the Computation Institute of the Universidade Federal Fluminense.
+The tool was proposed and developed as a partial requirement for concluding the Project Management course taught by professor [Leonardo Murta](https://github.com/leomurta) for the graduate course at the Computation Institute of the Fluminense Federal University.
 
 ## Installation
 
