@@ -73,6 +73,9 @@ public class InputProcessor {
                             versioner.updateObjects();
                         }
                         break;
+                    case "version":
+                        System.out.println("lvn version 1.0.0");
+                        break;
                     default:
                         System.out.println("lvn: " + input[0] + " is not a lvn command.");
                         break;
