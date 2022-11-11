@@ -72,7 +72,6 @@ public class InputProcessor {
                         if (versioner.isLvnRepository()) {
                             versioner.updateObjects();
                         }
-                        //test
                         break;
                     default:
                         System.out.println("lvn: " + input[0] + " is not a lvn command.");

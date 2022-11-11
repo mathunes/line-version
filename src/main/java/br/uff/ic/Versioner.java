@@ -565,6 +565,8 @@ public class Versioner {
                     
                     this.addFileToVersioning(refFile.getString("path"));
                 }
+            } else {
+                System.out.println("lvn: objects are already updated.");
             }
         } catch (Exception e) {
             System.out.println("lvn: " + e);
