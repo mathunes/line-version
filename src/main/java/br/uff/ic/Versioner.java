@@ -526,4 +526,44 @@ public class Versioner {
         }        
     }
 
+    public void updateObjects() {
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/refs.json"));
+            String refsJsonString = "";
+
+            while (scanner.hasNext()){
+                refsJsonString = refsJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+            
+            JSONObject refsJsonObjects = new JSONObject(refsJsonString);
+            JSONArray refsJsonObjectsArray = refsJsonObjects.getJSONArray("objects");
+            int numberOfCommitsInRefs = refsJsonObjects.getInt("number-of-commits");
+
+            int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
+
+            if (numberOfCommitsInRefs != numberOfCommits) {
+                //delete all objects
+                terminal.runCommand("rm -rf .lvn/objects/*");
+
+                try {
+                    FileWriter refsJson = new FileWriter(".lvn/refs.json");
+                    refsJson.write("{\"objects\": [], \"number-of-commits\":" + numberOfCommits + "}");
+                    refsJson.close();
+                } catch (Exception e) {
+                    System.out.println("lvn: failed to create refs.json file.");
+                }
+                
+                //run versioning to files already versioned again
+                for (int i = 0; i < refsJsonObjectsArray.length(); i++) {
+                    JSONObject refFile = refsJsonObjectsArray.getJSONObject(i);
+                    
+                    this.addFileToVersioning(refFile.getString("path"));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+        }
+    }
 }

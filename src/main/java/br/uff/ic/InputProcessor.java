@@ -68,6 +68,11 @@ public class InputProcessor {
                             System.out.println("lvn: many parameters informed.");
                         }
                         break;
+                    case "update":
+                        if (versioner.isLvnRepository()) {
+                            versioner.updateObjects();
+                        }
+                        break;
                     default:
                         System.out.println("lvn: " + input[0] + " is not a lvn command.");
                         break;
