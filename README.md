@@ -10,13 +10,36 @@ The tool was proposed and developed as a partial requirement for concluding the 
 
 ## Installation
 
-1. Download the package available for your operating system:
+Follow the instructions for your operating system
 
-- [Windows]()
-- [Linux]()
+- Windows
 
-2. Add .bat or .sh to your environment variables
-3. Check the tool version with the command
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.0.0/dist/lvn.zip)
+2. Extract the compressed folder
+3. Add bin path to your environment variables
+4. Check the tool version with the following command:
+
+```
+lvn version
+```
+
+- Linux
+
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.0.0/dist/lvn.tar.gz)
+2. Extract the compressed folder
+3. Grant execution permission to the lvn script
+
+```
+chmod u+x <path>/lvn/bin/lvn
+```
+
+4. Add bin path to variable $PATH
+
+```
+PATH=$PATH:<path>/lvn/bin
+```
+
+5. Check the tool version with the following command:
 
 ```
 lvn version
