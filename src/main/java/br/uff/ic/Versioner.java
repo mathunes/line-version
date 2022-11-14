@@ -572,4 +572,8 @@ public class Versioner {
             System.out.println("lvn: " + e);
         }
     }
+
+    public void getLinesInfoFromFileGraph(String filePath) {
+        System.out.println(filePath);
+    }
 }

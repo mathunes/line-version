@@ -46,7 +46,9 @@ public class InputProcessor {
                             }
                         } else if (input.length == 3) {
                             if (versioner.isLvnRepository()) {
-                                if (input[2].matches("-?\\d+")) {
+                                if (input[2].equals("-graph")) {
+                                    versioner.getLinesInfoFromFileGraph(input[1]);
+                                } else if (input[2].matches("-?\\d+")) {
                                     versioner.getLineInfoFromFile(input[1], Integer.parseInt(input[2]) -1);
                                 } else {
                                     System.out.println("lvn: invalid line number.");
