@@ -8,7 +8,7 @@ import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class EditorPanel extends JPanel {
+public class LvnPanel extends JPanel {
 
     private JTextArea jTextAreaCode;
     private JTextArea jTextAreaTerminal;
@@ -17,13 +17,13 @@ public class EditorPanel extends JPanel {
     private String text;
     private String filePath;
 
-    public EditorPanel(String filePathArg) {
+    public LvnPanel(String filePathArg) {
 
         filePath = filePathArg;
         String fileContent = "";
 
         try {
-            Scanner scanner = new Scanner(new File(this.filePath));
+            Scanner scanner = new Scanner(new File(filePath));
 
             while (scanner.hasNext()){
                 fileContent = fileContent + scanner.nextLine() + "\n";
@@ -31,7 +31,7 @@ public class EditorPanel extends JPanel {
 
             scanner.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("lvn: a problem occurred when opening the GUI - " + e);
         }
         
         text = fileContent;
@@ -43,6 +43,7 @@ public class EditorPanel extends JPanel {
         jTextAreaCode = new JTextArea(5, 5);
         jTextAreaTerminal = new JTextArea(5, 5);
         jTextAreaCode.setEditable(false);
+        jTextAreaCode.getCaret().setVisible(true);
         jTextAreaTerminal.setEditable(false);
         jTextAreaCode.setText(text);
 
