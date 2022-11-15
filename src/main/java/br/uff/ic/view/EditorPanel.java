@@ -45,7 +45,6 @@ public class EditorPanel extends JPanel {
         jTextAreaCode.setEditable(false);
         jTextAreaTerminal.setEditable(false);
         jTextAreaCode.setText(text);
-        jTextAreaTerminal.setText("LINE 1:");
 
         jScrollPaneCode = new JScrollPane(jTextAreaCode);
         jScrollPaneTerminal = new JScrollPane(jTextAreaTerminal);
@@ -63,7 +62,7 @@ public class EditorPanel extends JPanel {
 
                     Versioner versioner = new Versioner();
 
-                    versioner.getLineInfoFromFile(filePath, lineSelected - 1);
+                    jTextAreaTerminal.setText(versioner.getLineInfoFromFileGraph(filePath, lineSelected - 1));
                 }
 
             }
