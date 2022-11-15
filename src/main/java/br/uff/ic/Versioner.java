@@ -574,6 +574,14 @@ public class Versioner {
     }
 
     public void getLinesInfoFromFileGraph(String filePath) {
-        System.out.println(filePath);
+
+        try {
+
+            WindowFrame wf = new WindowFrame(filePath);
+    
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
     }
 }
