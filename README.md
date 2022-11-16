@@ -146,7 +146,10 @@ After that, click on the desired line.
 
 ![lvn graph example](https://raw.githubusercontent.com/mathunes/line-version/release/1.1.0/assets/lvn-graph-example-01.png)
 
-If you are using WLS2, try [setting up a WSL2 GUI X-Server](https://www.shogan.co.uk/how-tos/wsl2-gui-x-server-using-vcxsrv/).
+If you are using WLS2, follow these instructions to enable the GUI.
+
+- Export the DISPLAY variable with the command: `export DISPLAY=$(hostname).local:0`
+- [Setting up a WSL2 GUI X-Server](https://www.shogan.co.uk/how-tos/wsl2-gui-x-server-using-vcxsrv/).
 
 ### Versioning update
 
