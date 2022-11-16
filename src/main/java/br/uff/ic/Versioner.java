@@ -358,6 +358,27 @@ public class Versioner {
         return "";
     }
 
+    public JSONArray getObjectJsonLinesArray(String objectName) {
+        JSONObject objectJsonObjects;
+
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+            String objectJsonString = "";
+
+            while (scanner.hasNext()){
+                objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+            }
+
+            scanner.close();
+
+            objectJsonObjects = new JSONObject(objectJsonString);
+            return objectJsonObjects.getJSONArray("lines");
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+            return null;
+        }
+    }
+
     public void getLinesInfoFromFile(String filePath) {
 
         if (new File(filePath).exists()) {
@@ -365,28 +386,7 @@ public class Versioner {
 
                 String objectName = this.getLvnObjectFromFile(filePath);
 
-                System.out.println(objectName);
-
-                //Create method for this
-                JSONObject objectJsonObjects;
-                JSONArray objectJsonLinesArray;
-
-                try {
-                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-                    String objectJsonString = "";
-
-                    while (scanner.hasNext()){
-                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
-                    }
-
-                    scanner.close();
-
-                    objectJsonObjects = new JSONObject(objectJsonString);
-                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
-                } catch (Exception e) {
-                    System.out.println("lvn: " + e);
-                    return;
-                }
+                JSONArray objectJsonLinesArray = this.getObjectJsonLinesArray(objectName);
 
                 JSONArray jsonLineArray;
                 JSONObject jsonVersion;
@@ -421,26 +421,7 @@ public class Versioner {
 
                 String objectName = this.getLvnObjectFromFile(filePath);
 
-                //Create method for this
-                JSONObject objectJsonObjects;
-                JSONArray objectJsonLinesArray;
-
-                try {
-                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-                    String objectJsonString = "";
-
-                    while (scanner.hasNext()){
-                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
-                    }
-
-                    scanner.close();
-
-                    objectJsonObjects = new JSONObject(objectJsonString);
-                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
-                } catch (Exception e) {
-                    System.out.println("lvn: " + e);
-                    return;
-                }
+                JSONArray objectJsonLinesArray = this.getObjectJsonLinesArray(objectName);
 
                 JSONArray jsonLineArray;
                 JSONObject jsonVersion;
@@ -476,26 +457,7 @@ public class Versioner {
 
                 String objectName = this.getLvnObjectFromFile(filePath);
 
-                //Create method for this
-                JSONObject objectJsonObjects;
-                JSONArray objectJsonLinesArray;
-
-                try {
-                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-                    String objectJsonString = "";
-
-                    while (scanner.hasNext()){
-                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
-                    }
-
-                    scanner.close();
-
-                    objectJsonObjects = new JSONObject(objectJsonString);
-                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
-                } catch (Exception e) {
-                    System.out.println("lvn: " + e);
-                    return;
-                }
+                JSONArray objectJsonLinesArray = this.getObjectJsonLinesArray(objectName);
 
                 JSONArray jsonLineArray;
                 JSONObject jsonVersion;
@@ -594,26 +556,7 @@ public class Versioner {
 
         String objectName = this.getLvnObjectFromFile(filePath);
 
-        //Create method for this
-        JSONObject objectJsonObjects;
-        JSONArray objectJsonLinesArray;
-
-        try {
-            Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-            String objectJsonString = "";
-
-            while (scanner.hasNext()){
-                objectJsonString = objectJsonString + scanner.nextLine() + "\n";
-            }
-
-            scanner.close();
-
-            objectJsonObjects = new JSONObject(objectJsonString);
-            objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
-        } catch (Exception e) {
-            System.out.println("lvn: " + e);
-            return "";
-        }
+        JSONArray objectJsonLinesArray = this.getObjectJsonLinesArray(objectName);
 
         JSONArray jsonLineArray;
         JSONObject jsonVersion;
@@ -622,7 +565,7 @@ public class Versioner {
             jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
 
             returnString = "LINE " + (lineNumber+1) + ":\n";
-            
+
             for (int j = 0; j < jsonLineArray.length(); j++) {
                 returnString = returnString + "\tVERSION " + (j+1) + ": \n";
 
