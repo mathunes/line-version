@@ -10,7 +10,20 @@ The tool was proposed and developed as a partial requirement for concluding the 
 
 ## Installation
 
-Follow the instructions for Linux operating system
+Follow the instructions for your operating system
+
+- Windows
+
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.zip)
+2. Extract the compressed folder
+3. Add bin path to your environment variables
+4. Check the tool version with the following command:
+
+```
+lvn version
+```
+
+- Linux
 
 1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.tar.gz)
 2. Extract the compressed folder
@@ -161,8 +174,7 @@ lvn update
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 After forking the project, follow the instructions below to work locally on the project:
 
