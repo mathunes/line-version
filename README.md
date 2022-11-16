@@ -146,6 +146,8 @@ After that, click on the desired line.
 
 ![lvn graph example](https://raw.githubusercontent.com/mathunes/line-version/release/1.1.0/assets/lvn-graph-example-01.png)
 
+If you are using WLS2, try [setting up a WSL2 GUI X-Server](https://www.shogan.co.uk/how-tos/wsl2-gui-x-server-using-vcxsrv/).
+
 ### Versioning update
 
 After versioning the lines with the LVN, the Git project will probably evolve and receive new commits. In this case, the LVN base will be out of date with the new versions and to correct this issue, just type the following command to update all the LVN objects.
