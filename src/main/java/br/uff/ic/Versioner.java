@@ -575,7 +575,15 @@ public class Versioner {
 
     public void getLinesInfoFromFileGraph(String filePath) {
         try {
-            new LvnFrame(filePath);
+            if (new File(filePath).exists()) {
+                if (this.checkIfLvnObjectFromFileExists(filePath)) {
+                    new LvnFrame(filePath);
+                } else {
+                    System.out.println("lvn: this file is not versioned by lvn.");
+                }
+            } else {
+                System.out.println("lvn: this file does not exists.");
+            }
         } catch (Exception e) {
             System.out.println("lvn: a problem occurred when opening the GUI - " + e);
         }
@@ -584,57 +592,48 @@ public class Versioner {
     public String getLineInfoFromFileGraph(String filePath, int lineNumber) {
         String returnString = "";
 
-        if (new File(filePath).exists()) {
-            if (this.checkIfLvnObjectFromFileExists(filePath)) {
+        String objectName = this.getLvnObjectFromFile(filePath);
 
-                String objectName = this.getLvnObjectFromFile(filePath);
+        //Create method for this
+        JSONObject objectJsonObjects;
+        JSONArray objectJsonLinesArray;
 
-                //Create method for this
-                JSONObject objectJsonObjects;
-                JSONArray objectJsonLinesArray;
+        try {
+            Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+            String objectJsonString = "";
 
-                try {
-                    Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
-                    String objectJsonString = "";
+            while (scanner.hasNext()){
+                objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+            }
 
-                    while (scanner.hasNext()){
-                        objectJsonString = objectJsonString + scanner.nextLine() + "\n";
-                    }
+            scanner.close();
 
-                    scanner.close();
+            objectJsonObjects = new JSONObject(objectJsonString);
+            objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+        } catch (Exception e) {
+            System.out.println("lvn: " + e);
+            return "";
+        }
 
-                    objectJsonObjects = new JSONObject(objectJsonString);
-                    objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
-                } catch (Exception e) {
-                    System.out.println("lvn: " + e);
-                    return "";
-                }
+        JSONArray jsonLineArray;
+        JSONObject jsonVersion;
 
-                JSONArray jsonLineArray;
-                JSONObject jsonVersion;
+        if ((lineNumber >= 0) && (lineNumber < objectJsonLinesArray.length())) {    
+            jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
 
-                if ((lineNumber >= 0) && (lineNumber < objectJsonLinesArray.length())) {    
-                    jsonLineArray = new JSONArray(objectJsonLinesArray.getJSONArray(lineNumber));
+            returnString = "LINE " + (lineNumber+1) + ":\n";
+            
+            for (int j = 0; j < jsonLineArray.length(); j++) {
+                returnString = returnString + "\tVERSION " + (j+1) + ": \n";
 
-                    returnString = "LINE " + (lineNumber+1) + ":\n";
-                    for (int j = 0; j < jsonLineArray.length(); j++) {
-                        returnString = returnString + "\tVERSION " + (j+1) + ": \n";
-
-                        returnString = returnString + "\t\tCONTENT: " + jsonLineArray.getJSONObject(j).getString("content") + "\n";
-                        returnString = returnString + "\t\tAUTHOR: " + jsonLineArray.getJSONObject(j).getString("author") + "\n";
-                        returnString = returnString + "\t\tDATE: " + jsonLineArray.getJSONObject(j).getString("date") + "\n";
-                        returnString = returnString + "\t\tMESSAGE: " + jsonLineArray.getJSONObject(j).getString("message") + "\n";
-                        returnString = returnString + "\t\tHASH COMMIT: " + jsonLineArray.getJSONObject(j).getString("hash") + "\n";
-
-                    }
-                } else {
-                    returnString = "lvn: invalid line number.";
-                }
-            } else {
-                returnString = "lvn: this file is not versioned by lvn.";
+                returnString = returnString + "\t\tCONTENT: " + jsonLineArray.getJSONObject(j).getString("content") + "\n";
+                returnString = returnString + "\t\tAUTHOR: " + jsonLineArray.getJSONObject(j).getString("author") + "\n";
+                returnString = returnString + "\t\tDATE: " + jsonLineArray.getJSONObject(j).getString("date") + "\n";
+                returnString = returnString + "\t\tMESSAGE: " + jsonLineArray.getJSONObject(j).getString("message") + "\n";
+                returnString = returnString + "\t\tHASH COMMIT: " + jsonLineArray.getJSONObject(j).getString("hash") + "\n";
             }
         } else {
-            returnString = "lvn: this file does not exists.";
+            returnString = "lvn: invalid line number.";
         }
 
         return returnString;

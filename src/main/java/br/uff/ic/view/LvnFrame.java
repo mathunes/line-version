@@ -1,6 +1,6 @@
 package br.uff.ic;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class LvnFrame extends JFrame {
 
