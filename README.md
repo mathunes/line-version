@@ -12,7 +12,7 @@ The tool was proposed and developed as a partial requirement for concluding the 
 
 Follow the instructions for Linux operating system
 
-1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.0.0/dist/lvn.tar.gz)
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.tar.gz)
 2. Extract the compressed folder
 3. Grant execution permission to the lvn script
 
@@ -134,6 +134,16 @@ LINE 68:
                 HASH COMMIT: 99fe6fd4116bad11c0f7974624dea3f4bc54ee45
 ```
 
+#### Get versions of all lines in the file by clicking in file line graphically
+
+To get all version of all lines in your versioned file graphically, type the following command.
+
+```
+lvn show <path file> -graph
+```
+
+After that, click on the desired line.
+
 ### Versioning update
 
 After versioning the lines with the LVN, the Git project will probably evolve and receive new commits. In this case, the LVN base will be out of date with the new versions and to correct this issue, just type the following command to update all the LVN objects.
@@ -141,7 +151,6 @@ After versioning the lines with the LVN, the Git project will probably evolve an
 ```
 lvn update
 ```
-
 
 ## Contributing
 
@@ -155,7 +164,7 @@ After forking the project, follow the instructions below to work locally on the 
 
 Compile the code: mvn clean install
 
-Run the tool: java -cp target/line-version-1.0.0-jar-with-dependencies.jar br.uff.ic.App <commands>
+Run the tool: java -cp target/line-version-1.1.0-jar-with-dependencies.jar br.uff.ic.App <commands>
 
 ## License
 
