@@ -28,8 +28,8 @@ public class Versioner {
             if (new File(".lvn").exists()) {
                 System.out.println("lvn: repository is already initialized.");
             } else {
-                terminal.runCommand("mkdir .lvn");
-                terminal.runCommand("mkdir objects", ".lvn");
+                new File(".lvn").mkdir();
+                new File(".lvn/objects").mkdir();
                 int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
                 try {
@@ -57,8 +57,8 @@ public class Versioner {
                 if (new File(directory + "/.lvn").exists()) {
                     System.out.println("lvn: repository is already initialized.");
                 } else {
-                    terminal.runCommand("mkdir " + directory + "/.lvn");
-                    terminal.runCommand("mkdir objects", directory + "/.lvn");
+                    new File(directory + "/.lvn").mkdir();
+                    new File(directory + "/.lvn/objects").mkdir();
                     int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
                     try {
