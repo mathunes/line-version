@@ -6,10 +6,10 @@
 
   <groupId>br.uff.ic</groupId>
   <artifactId>line-version</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <name>line-version</name>
-  <url>http://www.example.com</url>
+  <url>https://github.com/mathunes/line-version</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
