@@ -12,7 +12,7 @@ The tool was proposed and developed as a partial requirement for concluding the 
 
 Follow the instructions for your operating system
 
-- Windows
+### Windows
 
 1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.zip)
 2. Extract the compressed folder
@@ -23,7 +23,7 @@ Follow the instructions for your operating system
 lvn version
 ```
 
-- Linux
+### Linux
 
 1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.tar.gz)
 2. Extract the compressed folder
