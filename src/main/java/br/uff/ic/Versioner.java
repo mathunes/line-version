@@ -381,6 +381,10 @@ public class Versioner {
 
     public void getLinesInfoFromFile(String filePath) {
 
+        if (filePath.startsWith(".\\")) {
+            filePath = filePath.replace(".\\", "");
+        }
+
         if (new File(filePath).exists()) {
             if (this.checkIfLvnObjectFromFileExists(filePath)) {
 
@@ -416,6 +420,11 @@ public class Versioner {
     }
 
     public void getLineInfoFromFile(String filePath, int lineNumber) {
+
+        if (filePath.startsWith(".\\")) {
+            filePath = filePath.replace(".\\", "");
+        }
+
         if (new File(filePath).exists()) {
             if (this.checkIfLvnObjectFromFileExists(filePath)) {
 
@@ -452,6 +461,11 @@ public class Versioner {
     }
 
     public void getLastLineVersionInfoFromFile(String filePath, int lineNumber) {
+
+        if (filePath.startsWith(".\\")) {
+            filePath = filePath.replace(".\\", "");
+        }
+
         if (new File(filePath).exists()) {
             if (this.checkIfLvnObjectFromFileExists(filePath)) {
 
@@ -536,6 +550,11 @@ public class Versioner {
     }
 
     public void getLinesInfoFromFileGraph(String filePath) {
+
+        if (filePath.startsWith(".\\")) {
+            filePath = filePath.replace(".\\", "");
+        }
+
         try {
             if (new File(filePath).exists()) {
                 if (this.checkIfLvnObjectFromFileExists(filePath)) {
@@ -552,6 +571,11 @@ public class Versioner {
     }
 
     public String getLineInfoFromFileGraph(String filePath, int lineNumber) {
+
+        if (filePath.startsWith(".\\")) {
+            filePath = filePath.replace(".\\", "");
+        }
+
         String returnString = "";
 
         String objectName = this.getLvnObjectFromFile(filePath);
