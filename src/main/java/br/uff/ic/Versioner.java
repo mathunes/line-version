@@ -502,6 +502,19 @@ public class Versioner {
         }        
     }
 
+    public void deleteDirectory(File directory) {
+        File[] files = directory.listFiles();
+
+        for (File file: files) {
+            if (file.isFile()) {
+                file.delete();
+            }
+            if (file.isDirectory()) {
+                deleteDirectory(file);
+            }
+        }
+    }
+
     public void updateObjects() {
         try {
             Scanner scanner = new Scanner(new File(".lvn/refs.json"));
@@ -520,7 +533,7 @@ public class Versioner {
             int numberOfCommits = Integer.parseInt(terminal.runCommand("git rev-list --all --count").get(0));
 
             if (numberOfCommitsInRefs != numberOfCommits) {
-                terminal.runCommand("rm -rf .lvn/objects/.");
+                this.deleteDirectory(new File(".lvn/objects"));
 
                 File lvnObjectsDirectory = new File(".lvn/objects");      
                 String[] objectsArray;    
