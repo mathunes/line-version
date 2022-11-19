@@ -1,6 +1,6 @@
 # Line Version
 
-Line Versioning, also called LVN, is a Git helper tool for line-level versioning. LVN acts on projects already versioned by Git by traversing their snapshots and generating versions for each line of the tracked files.
+Line Version, also called LVN, is a Git helper tool for line-level versioning. LVN acts on projects already versioned by Git by traversing their snapshots and generating versions for each line of the tracked files.
 
 LVN has a storage external to the standard Git storage, having its structure represented in JSON-formatted files.
 
