@@ -213,13 +213,26 @@ public class Versioner {
         return commitInfoList;
     }
 
-    public void createVersioningForObjectFile(String filePath, String objectName) {
-        List<CommitInfo> commitInfoList = this.getCommitsInfoFromFile(filePath);
+    private String escape(String raw) {
+        String escaped = raw;
+        escaped = escaped.replace("\\", "\\\\");
+        escaped = escaped.replace("\"", "\\\"");
+        escaped = escaped.replace("\b", "\\b");
+        escaped = escaped.replace("\f", "\\f");
+        escaped = escaped.replace("\n", "\\n");
+        escaped = escaped.replace("\r", "\\r");
+        escaped = escaped.replace("\t", "\\t");
+        // TODO: escape other non-printing characters using uXXXX notation
+        return escaped;
+    }
 
-        String hash = "";
-        String author = "";
-        String date = "";
-        String message = "";
+    public void createVersioningForObjectFile(String filePath, String objectName) {
+        // List<CommitInfo> commitInfoList = this.getCommitsInfoFromFile(filePath);
+
+        // String hash = "";
+        // String author = "";
+        // String date = "";
+        // String message = "";
 
         JSONObject objectJsonObjects;
         JSONArray objectJsonLinesArray;
@@ -241,69 +254,71 @@ public class Versioner {
             return;
         }
 
-        //for each commit
-        for (int i = 0; i < commitInfoList.size(); i++) {
+        List<String> gitLogLines = git.logPReverse(filePath);
 
-            hash = commitInfoList.get(i).getHash();
-            author = commitInfoList.get(i).getAuthor();
-            date = commitInfoList.get(i).getDate();
-            message = commitInfoList.get(i).getMessage();
+        int j = 0;
+        boolean firstCommitInteraction = true;
 
-            List<String> fileByCommit = git.showCompleteFileByCommit(filePath, hash);
+        while (true) {
 
-            //first version
-            if (objectJsonLinesArray.length() == 0) {
-                
-                //for each file line
-                for (int j = 0; j < fileByCommit.size(); j++) {   
-                    JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
-
-                    JSONArray lineArray = new JSONArray("[" + lineObject + "]");
-
-                    objectJsonLinesArray.put(lineArray.toString());
-                }
-
-            } else {
-                int numberOfLinesAlreadyVersioned = objectJsonLinesArray.length();
-
-                //for each file line
-                for (int j = 0; j < fileByCommit.size(); j++) {
-                    
-                    if (j < numberOfLinesAlreadyVersioned) {
-                        JSONArray objectJsonLineArray = new JSONArray(objectJsonLinesArray.getString(j));
-                        String contentLine = objectJsonLineArray.getJSONObject(objectJsonLineArray.length() - 1).getString("content");
-                        
-                        if (!(fileByCommit.get(j).equals(contentLine))) {
-                            JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
-
-                            objectJsonLineArray.put(lineObject);
-
-                            objectJsonLinesArray.put(j, objectJsonLineArray.toString());
-                        }
-                    } else {
-                        JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
-
-                        JSONArray lineArray = new JSONArray("[" + lineObject + "]");
-    
-                        objectJsonLinesArray.put(lineArray.toString());
-                    }
-                }
-
-               
-                if (fileByCommit.size() < numberOfLinesAlreadyVersioned) {
-                    for (int j = fileByCommit.size(); j < numberOfLinesAlreadyVersioned; j++) {
-                        JSONArray lineArray = new JSONArray(objectJsonLinesArray.getString(j));
-
-                        if (!(lineArray.getJSONObject(lineArray.length() - 1)).get("content").equals(TAG_LVN_DELETED)) {
-                            JSONObject lineObject = commitInfoList.get(i).getLineObject(TAG_LVN_DELETED);
-                        
-                            lineArray.put(lineObject);
-
-                            objectJsonLinesArray.put(j, lineArray.toString());
-                        }
-                    }
-                }
+            if (j >= gitLogLines.size()) {
+                break;
             }
+            
+            if (gitLogLines.get(j).startsWith("commit ")) {
+
+                CommitInfo commitInfo = new CommitInfo();
+                
+                String hash = "\"hash\": \""+ gitLogLines.get(j).replace("commit ", "")+"\"";
+                commitInfo.setHash(gitLogLines.get(j).replace("commit ", ""));
+                j++;
+                String author = "\"author\": \""+ gitLogLines.get(j) +"\",";
+                commitInfo.setAuthor(gitLogLines.get(j));
+                j++;
+                String date = "\"date\": \""+ gitLogLines.get(j) +"\",";
+                commitInfo.setDate(gitLogLines.get(j));
+                j++;
+                j++;
+                String message = "\"message\": \""+ gitLogLines.get(j).trim() +"\",";
+                commitInfo.setMessage(gitLogLines.get(j).trim());
+                j++;
+                j++;
+                j++;
+                j++;
+                j++;
+                j++;
+                if (firstCommitInteraction) {
+                    j++;
+                    
+                    //for each file line
+                    while (true) {
+                        j++;
+
+                        String content = "\"content\": \""+ gitLogLines.get(j).replace("+", "").replaceAll("\"", "<lvn>INVERTED_COMMAS</lvn>").replaceAll("\n", "") +"\",";
+
+                        System.out.println(commitInfo.getLineObject(gitLogLines.get(j).trim().replace("+", "")));
+
+                        // JSONObject lineObject = new JSONObject("{" + JSONObject.quote(content + author + date + message + hash) + "}");
+
+                        // JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+
+                        // objectJsonLinesArray.put(lineArray.toString());
+
+                        if (gitLogLines.size() > j) {
+                            if (gitLogLines.get(j+1).equals("") || gitLogLines.get(j+1).equals("\\ No newline at end of file")) {
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+                // int startPositionToApplyVersion = Integer.parseInt(gitLogLines.get(j).replaceAll("@@ ", "").replaceAll(" @@", "").replace("-", "").split(" ")[0].split(",")[0]);
+            
+            }
+
+            firstCommitInteraction = false;
+            j++;
         }
 
         try {
@@ -325,6 +340,108 @@ public class Versioner {
         } catch (Exception e) {
             System.out.println("lvn: " + e);
         }
+
+        // try {
+        //     Scanner scanner = new Scanner(new File(".lvn/objects/" + objectName + ".json"));
+        //     String objectJsonString = "";
+
+        //     while (scanner.hasNext()){
+        //         objectJsonString = objectJsonString + scanner.nextLine() + "\n";
+        //     }
+
+        //     scanner.close();
+
+        //     objectJsonObjects = new JSONObject(objectJsonString);
+        //     objectJsonLinesArray = objectJsonObjects.getJSONArray("lines");
+        // } catch (Exception e) {
+        //     System.out.println("lvn: " + e);
+        //     return;
+        // }
+
+        // //for each commit
+        // for (int i = 0; i < commitInfoList.size(); i++) {
+
+        //     hash = commitInfoList.get(i).getHash();
+        //     author = commitInfoList.get(i).getAuthor();
+        //     date = commitInfoList.get(i).getDate();
+        //     message = commitInfoList.get(i).getMessage();
+
+        //     List<String> fileByCommit = git.showCompleteFileByCommit(filePath, hash);
+
+        //     //first version
+        //     if (objectJsonLinesArray.length() == 0) {
+                
+        //         //for each file line
+        //         for (int j = 0; j < fileByCommit.size(); j++) {   
+        //             JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+
+        //             JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+
+        //             objectJsonLinesArray.put(lineArray.toString());
+        //         }
+
+        //     } else {
+        //         int numberOfLinesAlreadyVersioned = objectJsonLinesArray.length();
+
+        //         //for each file line
+        //         for (int j = 0; j < fileByCommit.size(); j++) {
+                    
+        //             if (j < numberOfLinesAlreadyVersioned) {
+        //                 JSONArray objectJsonLineArray = new JSONArray(objectJsonLinesArray.getString(j));
+        //                 String contentLine = objectJsonLineArray.getJSONObject(objectJsonLineArray.length() - 1).getString("content");
+                        
+        //                 if (!(fileByCommit.get(j).equals(contentLine))) {
+        //                     JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+
+        //                     objectJsonLineArray.put(lineObject);
+
+        //                     objectJsonLinesArray.put(j, objectJsonLineArray.toString());
+        //                 }
+        //             } else {
+        //                 JSONObject lineObject = commitInfoList.get(i).getLineObject(fileByCommit.get(j));
+
+        //                 JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+    
+        //                 objectJsonLinesArray.put(lineArray.toString());
+        //             }
+        //         }
+
+               
+        //         if (fileByCommit.size() < numberOfLinesAlreadyVersioned) {
+        //             for (int j = fileByCommit.size(); j < numberOfLinesAlreadyVersioned; j++) {
+        //                 JSONArray lineArray = new JSONArray(objectJsonLinesArray.getString(j));
+
+        //                 if (!(lineArray.getJSONObject(lineArray.length() - 1)).get("content").equals(TAG_LVN_DELETED)) {
+        //                     JSONObject lineObject = commitInfoList.get(i).getLineObject(TAG_LVN_DELETED);
+                        
+        //                     lineArray.put(lineObject);
+
+        //                     objectJsonLinesArray.put(j, lineArray.toString());
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // try {
+        //     FileWriter objectJson = new FileWriter(".lvn/objects/" + objectName + ".json");
+        //     objectJson.write("{\"lines\": [");
+
+        //     for (int k = 0; k < objectJsonLinesArray.length(); k++) {
+        //         objectJson.write(objectJsonLinesArray.getString(k));
+
+        //         if (k < objectJsonLinesArray.length() - 1) {
+        //             objectJson.write(",");
+        //         }
+        //     }
+
+        //     objectJson.write("]}");
+        //     objectJson.close();
+
+        //     System.out.println("lvn: versioning created for " + filePath);
+        // } catch (Exception e) {
+        //     System.out.println("lvn: " + e);
+        // }
     }
 
     public String getLvnObjectFromFile(String filePath) {
