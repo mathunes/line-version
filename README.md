@@ -14,7 +14,7 @@ Follow the instructions for your operating system
 
 ### Windows
 
-1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.zip)
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.1/dist/lvn.zip)
 2. Extract the compressed folder
 3. Add bin path to your environment variables
 4. Check the tool version with the following command:
@@ -25,18 +25,18 @@ lvn version
 
 ### Linux
 
-1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.0/dist/lvn.tar.gz)
+1. Download the [package available](https://github.com/mathunes/line-version/blob/release/1.1.1/dist/lvn.tar.gz)
 2. Extract the compressed folder
 3. Grant execution permission to the lvn script
 
 ```
-chmod u+x <path>/lvn/bin/lvn
+chmod u+x /<path>/lvn/bin/lvn
 ```
 
 4. Add bin path to variable $PATH
 
 ```
-PATH=$PATH:<path>/lvn/bin
+PATH=$PATH:/<path>/lvn/bin
 ```
 
 5. Check the tool version with the following command:
@@ -183,7 +183,7 @@ After forking the project, follow the instructions below to work locally on the 
 
 Compile the code: mvn clean install
 
-Run the tool: java -cp target/line-version-1.1.0-jar-with-dependencies.jar br.uff.ic.App <commands>
+Run the tool: java -cp target/line-version-1.1.1-jar-with-dependencies.jar br.uff.ic.App <commands>
 
 ## License
 
