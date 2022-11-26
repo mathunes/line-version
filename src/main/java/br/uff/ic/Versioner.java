@@ -384,6 +384,10 @@ public class Versioner {
         if (filePath.startsWith(".\\")) {
             filePath = filePath.replace(".\\", "");
         }
+         
+        if (filePath.contains("\\")) {
+            filePath = filePath.replaceAll("\\\\", "/");
+        }
 
         if (new File(filePath).exists()) {
             if (this.checkIfLvnObjectFromFileExists(filePath)) {
@@ -423,6 +427,10 @@ public class Versioner {
 
         if (filePath.startsWith(".\\")) {
             filePath = filePath.replace(".\\", "");
+        }
+        
+        if (filePath.contains("\\")) {
+            filePath = filePath.replaceAll("\\\\", "/");
         }
 
         if (new File(filePath).exists()) {
@@ -464,6 +472,10 @@ public class Versioner {
 
         if (filePath.startsWith(".\\")) {
             filePath = filePath.replace(".\\", "");
+        }
+        
+        if (filePath.contains("\\")) {
+            filePath = filePath.replaceAll("\\\\", "/");
         }
 
         if (new File(filePath).exists()) {
@@ -567,6 +579,10 @@ public class Versioner {
         if (filePath.startsWith(".\\")) {
             filePath = filePath.replace(".\\", "");
         }
+        
+        if (filePath.contains("\\")) {
+            filePath = filePath.replaceAll("\\\\", "/");
+        }
 
         try {
             if (new File(filePath).exists()) {
@@ -587,6 +603,10 @@ public class Versioner {
 
         if (filePath.startsWith(".\\")) {
             filePath = filePath.replace(".\\", "");
+        }
+        
+        if (filePath.contains("\\")) {
+            filePath = filePath.replaceAll("\\\\", "/");
         }
 
         String returnString = "";
