@@ -42,10 +42,10 @@ public class CommitInfo {
     }
 
     public JSONObject getLineObject(String contentLine) {
-        String content = "\"content\": \""+ contentLine.replaceAll("\"", "\\\\\"").replaceAll("\n", "") +"\",";
+        String content = "\"content\": " + JSONObject.quote(contentLine.replaceAll("\"", "\\\\\"").replaceAll("\n", "")) +",";
         String author = "\"author\": \""+ this.author.replaceAll("\n", "") +"\",";
         String date = "\"date\": \""+ this.date.replaceAll("\n", "") +"\",";
-        String message = "\"message\": \""+ this.message.replaceAll("\n", "") +"\",";
+        String message = "\"message\": "+ JSONObject.quote(this.message.replaceAll("\n", "")) +",";
         String hash = "\"hash\": \""+ this.hash.replaceAll("\n", "") +"\"";
 
         return new JSONObject("{" + content + author + date + message + hash + "}");
