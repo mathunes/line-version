@@ -294,15 +294,15 @@ public class Versioner {
                     while (true) {
                         j++;
 
-                        String content = "\"content\": \""+ gitLogLines.get(j).replace("+", "").replaceAll("\"", "<lvn>INVERTED_COMMAS</lvn>").replaceAll("\n", "") +"\",";
+                        String content = "\"content\": "+ JSONObject.quote(gitLogLines.get(j).replace("+", "").replaceAll("\n", "")) +",";
 
-                        System.out.println(commitInfo.getLineObject(gitLogLines.get(j).trim().replace("+", "")));
+                        System.out.println(commitInfo.getLineObject(gitLogLines.get(j).trim().replace("+", "").replaceAll("\n", "")));
 
-                        // JSONObject lineObject = new JSONObject("{" + JSONObject.quote(content + author + date + message + hash) + "}");
+                        JSONObject lineObject = new JSONObject("{" + content + author + date + message + hash + "}");
 
-                        // JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+                        JSONArray lineArray = new JSONArray("[" + lineObject + "]");
 
-                        // objectJsonLinesArray.put(lineArray.toString());
+                        objectJsonLinesArray.put(lineArray.toString());
 
                         if (gitLogLines.size() > j) {
                             if (gitLogLines.get(j+1).equals("") || gitLogLines.get(j+1).equals("\\ No newline at end of file")) {
