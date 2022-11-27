@@ -296,8 +296,6 @@ public class Versioner {
 
                         String content = "\"content\": "+ JSONObject.quote(gitLogLines.get(j).replace("+", "").replaceAll("\n", "")) +",";
 
-                        System.out.println(commitInfo.getLineObject(gitLogLines.get(j).trim().replace("+", "").replaceAll("\n", "")));
-
                         JSONObject lineObject = new JSONObject("{" + content + author + date + message + hash + "}");
 
                         JSONArray lineArray = new JSONArray("[" + lineObject + "]");
@@ -309,6 +307,92 @@ public class Versioner {
                                 break;
                             }
                         }
+                    }
+
+                } else {
+
+                    int initialPositionVersion = Integer.parseInt(Character.toString(gitLogLines.get(j).replaceAll("@", "").trim().charAt(1)));
+                    
+                    int cont = 0;
+
+                    while (true) {
+                        j++;
+                        
+                        if ((!gitLogLines.get(j).startsWith("-")) && (!gitLogLines.get(j).startsWith("+"))) {
+                            initialPositionVersion++;
+                        }
+
+                        if (gitLogLines.get(j).startsWith("-")) {
+                            cont++;
+                        }
+
+                        if (gitLogLines.get(j).startsWith("+")) {
+
+                            JSONArray objectJsonLinesArrayAux = new JSONArray();
+
+                            if (cont == 0) {
+
+                                String content = "\"content\": "+ JSONObject.quote(gitLogLines.get(j).replace("+", "").replaceAll("\n", "")) +",";
+                               
+                                JSONObject lineObject = new JSONObject("{" + content + author + date + message + hash + "}");
+
+                                JSONArray lineArray = new JSONArray("[" + lineObject + "]");
+
+                                objectJsonLinesArrayAux.clear();
+
+                                for (int k = 0; k < objectJsonLinesArray.length(); k++) {
+
+                                    if (k == (initialPositionVersion - 1)) {
+                                        objectJsonLinesArrayAux.put(lineArray.toString());
+                                    }
+
+                                    objectJsonLinesArrayAux.put(objectJsonLinesArray.get(k).toString());
+
+                                }
+
+                                objectJsonLinesArray = objectJsonLinesArrayAux;
+
+                            } else {
+
+                                String content = "\"content\": "+ JSONObject.quote(gitLogLines.get(j).replace("+", "").replaceAll("\n", "")) +",";
+
+                                JSONObject lineObject = new JSONObject("{" + content + author + date + message + hash + "}");
+
+                                JSONArray lineWithNewVersions = new JSONArray(objectJsonLinesArray.get(initialPositionVersion - 1).toString());
+
+                                lineWithNewVersions.put(lineObject);
+
+                                objectJsonLinesArrayAux.clear();
+
+                                for (int k = 0; k < objectJsonLinesArray.length(); k++) {
+                                    if (k == (initialPositionVersion - 1)) {
+                                        objectJsonLinesArrayAux.put(lineWithNewVersions);
+                                    } else {
+                                        objectJsonLinesArrayAux.put(objectJsonLinesArray.get(k).toString());
+                                    }
+                                }
+
+
+                                objectJsonLinesArray = objectJsonLinesArrayAux;
+
+                                cont--;
+
+                            }
+
+                            initialPositionVersion++;
+                            
+                        }
+
+                        if ((gitLogLines.size() - 1) == j) {
+                            break;
+                        }
+
+                        if (gitLogLines.size() > j) {
+                            if (gitLogLines.get(j+1).equals("") || gitLogLines.get(j+1).equals("\\ No newline at end of file")) {
+                                break;
+                            }
+                        }
+
                     }
 
                 }
